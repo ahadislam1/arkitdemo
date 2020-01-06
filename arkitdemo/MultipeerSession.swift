@@ -15,6 +15,8 @@ class MultipeerSession: NSObject {
     private var session: MCSession!
     private var serviceAdvertiser: MCNearbyServiceAdvertiser!
     private var serviceBrowser: MCNearbyServiceBrowser!
+    var sessionIDObservation: NSKeyValueObservation?
+
     
     private let receivedDataHandler: (Data, MCPeerID) -> Void
     private let peerJoinedHandler: (MCPeerID) -> Void
@@ -46,6 +48,7 @@ class MultipeerSession: NSObject {
     }
     
     func sendToAllPeers(_ data: Data, reliably: Bool) {
+        print("Sending to peers...")
         sendToPeers(data, reliably: reliably, peers: connectedPeers)
     }
     
@@ -100,6 +103,7 @@ extension MultipeerSession: MCNearbyServiceBrowserDelegate {
     /// - Tag: FoundPeer
     public func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         // Ask the handler whether we should invite this peer or not
+        print("Found Peer..")
         let accepted = peerDiscoveredHandler(peerID)
         if accepted {
             browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
@@ -118,6 +122,7 @@ extension MultipeerSession: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID,
                     withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         // Call the handler to accept the peer's invitation to join.
+        print("Accepted Invite..")
         invitationHandler(true, self.session)
     }
 }

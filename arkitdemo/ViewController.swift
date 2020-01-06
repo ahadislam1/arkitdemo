@@ -9,6 +9,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import RealityKit
 import MultipeerConnectivity
 
 class ViewController: UIViewController {
@@ -18,9 +19,20 @@ class ViewController: UIViewController {
     var nodeWeCanChange: SCNNode?
     var multipeerSession: MultipeerSession?
     var peerSessionIDs = [MCPeerID: String]()
+    var sessionIDObservation: NSKeyValueObservation?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        sessionIDObservation = observe(\.arSceneView.session.identifier, options: [.new]) { object, change in
+            print("SessionID changed to: \(change.newValue!)")
+            // Tell all other peers about your ARSession's changed ID, so
+            // that they can keep track of which ARAnchors are yours.
+            guard let multipeerSession = self.multipeerSession else { return }
+            self.sendARSessionIDTo(peers: multipeerSession.connectedPeers)
+        }
+        UIApplication.shared.isIdleTimerDisabled = true
+        arSceneView.session.delegate = self
         config.planeDetection = .vertical
         print(config.isCollaborationEnabled)
         config.isCollaborationEnabled = true
@@ -29,12 +41,14 @@ class ViewController: UIViewController {
         let capsuleNode = SCNNode(geometry: SCNCapsule(capRadius: 0.03, height: 0.1))
         capsuleNode.position = SCNVector3(0.1, 0.1, -0.1)
         arSceneView.scene.rootNode.addChildNode(capsuleNode)
+        multipeerSession = MultipeerSession(receivedDataHandler: receivedData, peerJoinedHandler:
+        peerJoined, peerLeftHandler: peerLeft, peerDiscoveredHandler: peerDiscovered)
     }
     
     
 }
 
-extension ViewController: ARSCNViewDelegate {
+extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         
         if nodeWeCanChange == nil {
@@ -57,10 +71,12 @@ extension ViewController: ARSCNViewDelegate {
             //4. Add It To Our Node & Thus The Hiearchy
             node.addChildNode(nodeWeCanChange)
         }
+        
     }
     
     func session(_ session: ARSession, didOutputCollaborationData data: ARSession.CollaborationData) {
         guard let multipeerSession = multipeerSession else { return }
+        print("Outputting Collaboration Data...")
         if !multipeerSession.connectedPeers.isEmpty {
             guard let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: data, requiringSecureCoding: true)
                 else { fatalError("Unexpectedly failed to encode collaboration data.") }
@@ -74,6 +90,7 @@ extension ViewController: ARSCNViewDelegate {
     
     func receivedData(_ data: Data, from peer: MCPeerID) {
         if let collaborationData = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ARSession.CollaborationData.self, from: data) {
+            print("Updated session.")
             arSceneView.session.update(with: collaborationData)
             return
         }
@@ -103,10 +120,31 @@ extension ViewController: ARSCNViewDelegate {
     
     private func sendARSessionIDTo(peers: [MCPeerID]) {
         guard let multipeerSession = multipeerSession else { return }
+        print("Sending ARSessionID to peers...")
         let idString = arSceneView.session.identifier.uuidString
         let command = "SessionID:" + idString
         if let commandData = command.data(using: .utf8) {
             multipeerSession.sendToPeers(commandData, reliably: true, peers: peers)
         }
     }
+    
+    func peerDiscovered(_ peer: MCPeerID) -> Bool {
+        guard let multipeerSession = multipeerSession else { return false }
+        
+        if multipeerSession.connectedPeers.count > 4 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            if let anchor = anchor as? ARParticipantAnchor {
+                print("ARPArticipantAnchor located.")
+                
+            }
+        }
+    }
+    
 }
