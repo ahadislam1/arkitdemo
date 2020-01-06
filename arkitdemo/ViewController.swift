@@ -48,7 +48,7 @@ extension ViewController: ARSCNViewDelegate {
         nodeWeCanChange.eulerAngles.x = -.pi/2
         
         //5. Set It's Colour To Red
-        nodeWeCanChange.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        nodeWeCanChange.geometry?.firstMaterial?.diffuse.contents = UIImage(systemName: "rosette")
         
         //4. Add It To Our Node & Thus The Hiearchy
         node.addChildNode(nodeWeCanChange)
