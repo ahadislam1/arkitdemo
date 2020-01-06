@@ -14,6 +14,7 @@
 		0BD88AA223C16AD100CED4F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BD88AA123C16AD100CED4F9 /* Assets.xcassets */; };
 		0BD88AA523C16AD100CED4F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BD88AA323C16AD100CED4F9 /* LaunchScreen.storyboard */; };
 		0BD88AB023C16AD200CED4F9 /* arkitdemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD88AAF23C16AD200CED4F9 /* arkitdemoTests.swift */; };
+		0BD88ABB23C39DB000CED4F9 /* MultipeerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD88ABA23C39DB000CED4F9 /* MultipeerSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		0BD88AAB23C16AD200CED4F9 /* arkitdemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = arkitdemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BD88AAF23C16AD200CED4F9 /* arkitdemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arkitdemoTests.swift; sourceTree = "<group>"; };
 		0BD88AB123C16AD200CED4F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0BD88ABA23C39DB000CED4F9 /* MultipeerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				0BD88A9823C16AD000CED4F9 /* AppDelegate.swift */,
 				0BD88A9A23C16AD000CED4F9 /* SceneDelegate.swift */,
 				0BD88A9C23C16AD000CED4F9 /* ViewController.swift */,
+				0BD88ABA23C39DB000CED4F9 /* MultipeerSession.swift */,
 				0BD88A9E23C16AD000CED4F9 /* Main.storyboard */,
 				0BD88AA123C16AD100CED4F9 /* Assets.xcassets */,
 				0BD88AA323C16AD100CED4F9 /* LaunchScreen.storyboard */,
@@ -200,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BD88ABB23C39DB000CED4F9 /* MultipeerSession.swift in Sources */,
 				0BD88A9D23C16AD000CED4F9 /* ViewController.swift in Sources */,
 				0BD88A9923C16AD000CED4F9 /* AppDelegate.swift in Sources */,
 				0BD88A9B23C16AD000CED4F9 /* SceneDelegate.swift in Sources */,
