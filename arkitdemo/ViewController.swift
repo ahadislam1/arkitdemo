@@ -142,7 +142,7 @@ extension ViewController: ARSCNViewDelegate, ARSessionDelegate {
         for anchor in anchors {
             if let anchor = anchor as? ARParticipantAnchor {
                 print("ARPArticipantAnchor located.")
-                
+                 
             }
         }
     }
